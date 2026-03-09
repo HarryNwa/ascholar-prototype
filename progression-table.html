@@ -778,7 +778,7 @@
             <td><span class="tier-badge tier-sapphire">🔵 Sapphire</span></td>
             <td><span class="status-badge status-cleared">✓ Cleared</span></td>
             <td style="color: #94A3B8;">—</td>
-            <td style="font-size: 13px; color: #94A3B8;">No offers yet</td>
+            <td style="font-size: 13px; color: #94748B;">No offers yet</td>
             <td><button class="action-button">View Profile</button></td>
           </tr>
 
@@ -813,7 +813,7 @@
   </div>
 
   <!-- Modal (hidden by default) -->
-  <div class="modal" style="display: none;" id="profileModal">
+  <div class="modal" style="display: flex;" id="profileModal">
     <div class="modal-content">
       <div class="modal-header">
         <h2 class="modal-title">Chinedu E.</h2>
@@ -829,7 +829,7 @@
           </div>
           <div class="info-item">
             <div class="info-label">Email</div>
-            <div class="info-value"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="60034e050d0d010e15050c200518010d100c054e030f0d">[email&#160;protected]</a></div>
+            <div class="info-value">chinedu.e@example.com</div>
           </div>
           <div class="info-item">
             <div class="info-label">Country</div>
@@ -882,10 +882,15 @@
     </div>
   </div>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  <script>
     function openModal() {
       document.getElementById('profileModal').style.display = 'flex';
     }
 
     function closeModal() {
-      document.getElementById('profileModal').style.display = 'no
+      document.getElementById('profileModal').style.display = 'none';
+    }
+  </script>
+
+</body>
+</html>
