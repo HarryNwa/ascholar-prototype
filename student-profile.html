@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Profile | AScholar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue-deep: #1F4788;
+      --blue-main: #2E75B6;
+      --yellow: #F0F000;
+      --off-white: #F5F7FA;
+      --slate: #334155;
+      --border: #E5E7EB;
+      --success: #10B981;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--off-white);
+      color: var(--slate);
+    }
+
+    /* Header */
+    .header {
+      background: white;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+    }
+
+    .nav-logo-img { 
+      width: 164px; 
+      height: 40px; 
+    }
+
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-square {
+      width: 36px;
+      height: 36px;
+      background: var(--yellow);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--blue-deep);
+    }
+
+    .logo-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 24px;
+      color: var(--blue-deep);
+    }
+
+    /* Profile Hero */
+    .profile-hero {
+      background: linear-gradient(135deg, var(--blue-deep) 0%, var(--blue-main) 100%);
+      color: white;
+      padding: 3rem 0;
+    }
+
+    .profile-hero-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .profile-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: var(--yellow);
+      color: var(--blue-deep);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 48px;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      flex-shrink: 0;
+    }
+
+    .profile-info {
+      flex: 1;
+    }
+
+    .profile-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 42px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .profile-meta {
+      font-size: 18px;
+      opacity: 0.9;
+      margin-bottom: 16px;
+    }
+
+    .profile-tier {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 24px;
+      font-weight: 600;
+      font-size: 16px;
+      backdrop-filter: blur(10px);
+    }
+
+    /* Content */
+    .profile-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 2rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      border: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--blue-deep);
+      margin-bottom: 1.5rem;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+
+    .info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .info-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #94A3B8;
+      font-weight: 600;
+    }
+
+    .info-value {
+      font-size: 16px;
+      color: var(--slate);
+      font-weight: 500;
+    }
+
+    /* Score Cards */
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .score-card {
+      background: var(--off-white);
+      padding: 1.5rem;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .score-label {
+      font-size: 13px;
+      color: #64748B;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .score-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--blue-deep);
+    }
+
+    .cumulative-score {
+      background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+      padding: 2rem;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .cumulative-label {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #64748B;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .cumulative-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 56px;
+      font-weight: 700;
+      color: var(--blue-deep);
+    }
+
+    /* Offers */
+    .offer-item {
+      padding: 1.5rem;
+      background: var(--off-white);
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .offer-item:hover {
+      border-color: var(--blue-main);
+      background: #EFF6FF;
+    }
+
+    .offer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .offer-institution {
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--blue-deep);
+      margin-bottom: 4px;
+    }
+
+    .offer-program {
+      font-size: 14px;
+      color: #64748B;
+    }
+
+    .offer-badge {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    .offer-badge.full {
+      background: #D1FAE5;
+      color: #065F46;
+    }
+
+    .offer-badge.partial {
+      background: #DBEAFE;
+      color: #1E40AF;
+    }
+
+    .offer-details {
+      font-size: 14px;
+      color: var(--slate);
+      line-height: 1.6;
+    }
+
+    /* Sidebar Stats */
+    .stat-box {
+      background: var(--off-white);
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #94A3B8;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--blue-deep);
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .stat-unit {
+      font-size: 16px;
+      color: #64748B;
+    }
+
+    /* Buttons */
+    .action-button {
+      width: 100%;
+      padding: 14px;
+      background: var(--yellow);
+      color: var(--blue-deep);
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 12px;
+    }
+
+    .action-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(240, 240, 0, 0.3);
+    }
+
+    .secondary-button {
+      width: 100%;
+      padding: 14px;
+      background: white;
+      color: var(--blue-main);
+      border: 2px solid var(--blue-main);
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .secondary-button:hover {
+      background: var(--blue-main);
+      color: white;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .profile-content {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .profile-hero-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .score-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <img src="assets/AScholar-logo.png" class="nav-logo-img" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Hero -->
+  <div class="profile-hero">
+    <div class="profile-hero-inner">
+      <div class="profile-avatar">AO</div>
+      <div class="profile-info">
+        <h1 class="profile-name">Adaeze Okonkwo</h1>
+        <p class="profile-meta">🇳🇬 Lagos, Nigeria • STEM Track • Cohort 1</p>
+        <div class="profile-tier">🔴 Ruby Scholar • Rank #12 of 892</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Content -->
+  <div class="profile-content">
+    
+    <!-- Main Column -->
+    <div>
+      
+      <!-- About -->
+      <div class="card">
+        <h2 class="card-title">About</h2>
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">Full Name</div>
+            <div class="info-value">Adaeze Okonkwo</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Email</div>
+            <div class="info-value">a.okonkwo@example.com</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Country</div>
+            <div class="info-value">🇳🇬 Nigeria</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Age</div>
+            <div class="info-value">21 years</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Track</div>
+            <div class="info-value">STEM</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Cohort</div>
+            <div class="info-value">Cohort 1 (Feb 2026)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Academic Performance -->
+      <div class="card">
+        <h2 class="card-title">Academic Performance</h2>
+        
+        <div class="score-grid">
+          <div class="score-card">
+            <div class="score-label">Round 1</div>
+            <div class="score-value">91%</div>
+          </div>
+          <div class="score-card">
+            <div class="score-label">Round 2</div>
+            <div class="score-value">88%</div>
+          </div>
+          <div class="score-card">
+            <div class="score-label">Round 3</div>
+            <div class="score-value">85%</div>
+          </div>
+        </div>
+
+        <div class="cumulative-score">
+          <div class="cumulative-label">Cumulative Score</div>
+          <div class="cumulative-value">87.5%</div>
+        </div>
+      </div>
+
+      <!-- Offers Received -->
+      <div class="card">
+        <h2 class="card-title">Offers & Scholarships (2)</h2>
+        
+        <div class="offer-item">
+          <div class="offer-header">
+            <div>
+              <div class="offer-institution">University of Leeds</div>
+              <div class="offer-program">MSc Computer Science</div>
+            </div>
+            <div class="offer-badge full">Full Scholarship</div>
+          </div>
+          <div class="offer-details">
+            Full tuition coverage + £12,000 annual stipend. 24-month program starting September 2026. Includes accommodation support for first year.
+          </div>
+        </div>
+
+        <div class="offer-item">
+          <div class="offer-header">
+            <div>
+              <div class="offer-institution">University of Birmingham</div>
+              <div class="offer-program">MSc Data Science</div>
+            </div>
+            <div class="offer-badge partial">50% Scholarship</div>
+          </div>
+          <div class="offer-details">
+            50% tuition waiver. 12-month intensive program starting September 2026. Option to extend with research project.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Sidebar -->
+    <div>
+      
+      <!-- Quick Stats -->
+      <div class="card">
+        <h2 class="card-title">Quick Stats</h2>
+        
+        <div class="stat-box">
+          <div class="stat-label">Current Rank</div>
+          <div class="stat-value">#12<span class="stat-unit">of 892</span></div>
+        </div>
+
+        <div class="stat-box">
+          <div class="stat-label">Scholar Tier</div>
+          <div class="stat-value" style="font-size: 24px; color: #DC2626;">🔴 Ruby</div>
+        </div>
+
+        <div class="stat-box">
+          <div class="stat-label">Profile Views</div>
+          <div class="stat-value">47<span class="stat-unit">institutions</span></div>
+        </div>
+
+        <div class="stat-box">
+          <div class="stat-label">Offers Received</div>
+          <div class="stat-value">2<span class="stat-unit">total</span></div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="card">
+        <h2 class="card-title">Actions</h2>
+        <button class="action-button">Share Profile</button>
+        <button class="secondary-button">Download Certificate</button>
+        <button class="secondary-button">View Progression Table</button>
+      </div>
+
+      <!-- Social Proof -->
+      <div class="card">
+        <h2 class="card-title">Achievements</h2>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div style="padding: 12px; background: #FEF3C7; border-radius: 8px; display: flex; align-items: center; gap: 12px;">
+            <span style="font-size: 24px;">⚡</span>
+            <div>
+              <div style="font-weight: 600; font-size: 14px; color: #92400E;">Top 2% Performer</div>
+              <div style="font-size: 12px; color: #92400E;">Ranked in top percentile</div>
+            </div>
+          </div>
+          <div style="padding: 12px; background: #D1FAE5; border-radius: 8px; display: flex; align-items: center; gap: 12px;">
+            <span style="font-size: 24px;">✓</span>
+            <div>
+              <div style="font-weight: 600; font-size: 14px; color: #065F46;">All Rounds Cleared</div>
+              <div style="font-size: 12px; color: #065F46;">Completed R1, R2, R3</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</body>
+</html>

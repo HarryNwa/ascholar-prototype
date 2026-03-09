@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Round 3 Exam | AScholar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue-deep: #1F4788;
+      --blue-main: #2E75B6;
+      --yellow: #F0F000;
+      --off-white: #F5F7FA;
+      --slate: #334155;
+      --border: #E5E7EB;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --error: #EF4444;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--off-white);
+      color: var(--slate);
+      overflow: hidden;
+    }
+
+    /* Exam Header */
+    .exam-header {
+      background: white;
+      border-bottom: 2px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .exam-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--blue-deep);
+    }
+
+    .exam-meta {
+      font-size: 14px;
+      color: #64748B;
+      margin-top: 2px;
+    }
+
+    .timer-container {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .timer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .timer-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #94A3B8;
+      font-weight: 600;
+    }
+
+    .timer-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--blue-deep);
+      padding: 8px 16px;
+      background: var(--off-white);
+      border-radius: 8px;
+      border: 2px solid var(--border);
+      min-width: 100px;
+      text-align: center;
+    }
+
+    .timer.warning .timer-value {
+      background: #FEF3C7;
+      border-color: var(--warning);
+      color: var(--warning);
+      animation: pulse-timer 0.5s infinite;
+    }
+
+    .timer.expired .timer-value {
+      background: #FEE2E2;
+      border-color: var(--error);
+      color: var(--error);
+    }
+
+    @keyframes pulse-timer {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .proctoring-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: #D1FAE5;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #065F46;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      animation: pulse-dot 2s infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+     /* Exam Layout */
+    .exam-container {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      height: calc(100vh - 80px);
+    }
+
+     /* Question Navigator */
+    .question-nav {
+      background: white;
+      border-right: 2px solid var(--border);
+      padding: 2rem 1.5rem;
+      overflow-y: auto;
+    }
+
+    .nav-title {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--slate);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .nav-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .nav-button {
+      aspect-ratio: 1;
+      border: 2px solid var(--border);
+      background: white;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--slate);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-button:hover {
+      border-color: var(--blue-main);
+      transform: scale(1.05);
+    }
+
+    .nav-button.answered {
+      background: var(--success);
+      color: white;
+      border-color: var(--success);
+    }
+
+    .nav-button.flagged {
+      background: var(--warning);
+      color: white;
+      border-color: var(--warning);
+    }
+
+    .nav-button.active {
+      background: var(--blue-main);
+      color: white;
+      border-color: var(--blue-main);
+      transform: scale(1.1);
+    }
+
+    .nav-legend {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 2px solid var(--border);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      font-size: 13px;
+    }
+
+    .legend-box {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      border: 2px solid var(--border);
+    }
+
+    .legend-box.answered {
+      background: var(--success);
+      border-color: var(--success);
+    }
+
+    .legend-box.flagged {
+      background: var(--warning);
+      border-color: var(--warning);
+    }
+
+    /* Question Area */
+    .question-area {
+      padding: 3rem;
+      overflow-y: auto;
+      background: var(--off-white);
+      height: calc(100vh - 120px);
+    }
+
+    .question-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .question-number {
+      font-size: 14px;
+      font-weight: 600;
+      color: #64748B;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+     .flag-button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--slate);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .flag-button:hover {
+      border-color: var(--warning);
+      color: var(--warning);
+    }
+
+    .flag-button.flagged {
+      background: var(--warning);
+      color: white;
+      border-color: var(--warning);
+    }
+
+    .question-card {
+      background: white;
+      border-radius: 12px;
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+      border: 1px solid var(--border);
+      transition: all 0.3s;
+    }
+
+    .question-card.locked {
+      background: #F8FAFC;
+      border-color: var(--error);
+      position: relative;
+    }
+
+    .locked-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(248, 250, 252, 0.95);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      z-index: 10;
+    }
+
+    .locked-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .locked-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--error);
+    }
+
+    .question-text {
+      font-size: 20px;
+      line-height: 1.7;
+      color: var(--blue-deep);
+      margin-bottom: 2rem;
+      font-weight: 500;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .option {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 1.5rem;
+      background: var(--off-white);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      pointer-events: all;
+    }
+
+    .option:hover {
+      border-color: var(--blue-main);
+      background: #EFF6FF;
+    }
+
+    .option.selected {
+      background: var(--blue-main);
+      border-color: var(--blue-main);
+      color: white;
+    }
+
+    .option.locked {
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    .option-letter {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: white;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .option.selected .option-letter {
+      background: var(--yellow);
+      border-color: var(--yellow);
+      color: var(--blue-deep);
+    }
+
+    .option-text {
+      font-size: 16px;
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    /* Navigation Buttons */
+    .question-nav-buttons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .nav-btn {
+      padding: 16px 48px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      background: var(--yellow);
+      color: var(--blue-deep);
+    }
+
+    .nav-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(240, 240, 0, 0.3);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Warning Banner */
+    .warning-banner {
+      background: #FEF3C7;
+      border-left: 4px solid var(--warning);
+      padding: 1rem 1.5rem;
+      margin-bottom: 2rem;
+      border-radius: 0 8px 8px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .warning-banner-icon {
+      font-size: 24px;
+    }
+
+    .warning-banner-text {
+      font-size: 14px;
+      color: #92400E;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 640px) {
+      .exam-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+
+      .timer-container {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .question-area {
+        padding: 2rem 1.5rem;
+      }
+
+      .question-card {
+        padding: 1.5rem;
+      }
+
+      .nav-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- Exam Header -->
+  <div class="exam-header">
+    <div>
+      <div class="exam-title">Round 3: Subject Mastery</div>
+      <div class="exam-meta">STEM Track • 100 Questions</div>
+    </div>
+    <div class="timer-container">
+      <div class="timer" id="questionTimer">
+        <div class="timer-label">Question Timer</div>
+        <div class="timer-value" id="questionTimerValue">0:45</div>
+      </div>
+      <div class="proctoring-status">
+        <div class="status-dot"></div>
+        <span>Session Monitored</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Exam Container -->
+  <div class="exam-container">
+    
+    <!-- Question Navigator -->
+    <div class="question-nav">
+      <div class="nav-title">Questions</div>
+      <div class="nav-grid">
+        <button class="nav-button answered">1</button>
+        <button class="nav-button answered">2</button>
+        <button class="nav-button answered">3</button>
+        <button class="nav-button answered">4</button>
+        <button class="nav-button answered">5</button>
+        <button class="nav-button answered">6</button>
+        <button class="nav-button flagged">7</button>
+        <button class="nav-button answered">8</button>
+        <button class="nav-button answered">9</button>
+        <button class="nav-button active">10</button>
+        <button class="nav-button">11</button>
+        <button class="nav-button">12</button>
+        <button class="nav-button">13</button>
+        <button class="nav-button">14</button>
+        <button class="nav-button">15</button>
+        <button class="nav-button">16</button>
+        <button class="nav-button">17</button>
+        <button class="nav-button">18</button>
+        <button class="nav-button">19</button>
+        <button class="nav-button">20</button>
+      </div>
+
+      <div class="nav-legend">
+        <div class="legend-item">
+          <div class="legend-box answered"></div>
+          <span>Answered</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-box"></div>
+          <span>Not Answered</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-box flagged"></div>
+          <span>Flagged</span>
+        </div>
+      </div>
+    </div>
+
+  <!-- Question Area -->
+  <div class="question-area">
+    <div class="question-container">
+      
+      <div class="question-header">
+        <div class="question-number" id="questionNumber">Question 1 of 5</div>
+        <button class="flag-button">
+            <span>🚩</span>
+            <span>Flag for Review</span>
+          </button>
+      </div>
+
+      <div class="warning-banner">
+        <div class="warning-banner-icon">⚠️</div>
+        <div class="warning-banner-text">
+          <strong>Time Limit:</strong> You have 45 seconds per question. If time expires, the question will lock and you'll move to the next one automatically.
+        </div>
+        <div class="warning-banner-text">
+            <strong>Proctoring Active:</strong> Tab switches detected: 0/3. Leaving this window may flag your session.
+          </div>
+      </div>
+
+      <div class="question-card" id="questionCard">
+        <div class="question-text" id="questionText">
+          A particle moves along a straight line such that its acceleration at time <em>t</em> is given by a(t) = 6t - 12. If the particle's velocity at t = 0 is 5 m/s and its position at t = 0 is 2 meters, what is the particle's position at t = 4 seconds?
+        </div>
+
+        <div class="options" id="optionsContainer">
+          <div class="option" data-answer="A">
+            <div class="option-letter">A</div>
+            <div class="option-text">18 meters</div>
+          </div>
+          <div class="option" data-answer="B">
+            <div class="option-letter">B</div>
+            <div class="option-text">22 meters</div>
+          </div>
+          <div class="option" data-answer="C">
+            <div class="option-letter">C</div>
+            <div class="option-text">26 meters</div>
+          </div>
+          <div class="option" data-answer="D">
+            <div class="option-letter">D</div>
+            <div class="option-text">30 meters</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-nav-buttons">
+        <button class="nav-btn" id="nextBtn">Next Question →</button>
+      </div>
+
+    </div>
+  </div>
+  </div>
+
+  <script>
+    // Question bank
+    const questions = [
+      {
+        text: "A particle moves along a straight line such that its acceleration at time <em>t</em> is given by a(t) = 6t - 12. If the particle's velocity at t = 0 is 5 m/s and its position at t = 0 is 2 meters, what is the particle's position at t = 4 seconds?",
+        options: [
+          { letter: "A", text: "18 meters" },
+          { letter: "B", text: "22 meters" },
+          { letter: "C", text: "26 meters" },
+          { letter: "D", text: "30 meters" }
+        ]
+      },
+      {
+        text: "In a distributed system, which consistency model guarantees that all replicas will eventually converge to the same state, but allows temporary inconsistencies?",
+        options: [
+          { letter: "A", text: "Strong consistency" },
+          { letter: "B", text: "Sequential consistency" },
+          { letter: "C", text: "Eventual consistency" },
+          { letter: "D", text: "Linearizability" }
+        ]
+      },
+      {
+        text: "A company's revenue R(x) in thousands of dollars is modeled by R(x) = -2x² + 80x - 300, where x is the number of units sold (in thousands). What is the maximum revenue the company can achieve?",
+        options: [
+          { letter: "A", text: "$500,000" },
+          { letter: "B", text: "$700,000" },
+          { letter: "C", text: "$800,000" },
+          { letter: "D", text: "$900,000" }
+        ]
+      },
+      {
+        text: "Which algorithm is most appropriate for finding the shortest path in a weighted graph with negative edge weights (but no negative cycles)?",
+        options: [
+          { letter: "A", text: "Dijkstra's algorithm" },
+          { letter: "B", text: "Bellman-Ford algorithm" },
+          { letter: "C", text: "Floyd-Warshall algorithm" },
+          { letter: "D", text: "Prim's algorithm" }
+        ]
+      },
+      {
+        text: "In thermodynamics, the Carnot efficiency depends on which of the following?",
+        options: [
+          { letter: "A", text: "Only the temperature of the hot reservoir" },
+          { letter: "B", text: "Only the temperature of the cold reservoir" },
+          { letter: "C", text: "The temperatures of both hot and cold reservoirs" },
+          { letter: "D", text: "The pressure difference between reservoirs" }
+        ]
+      }
+    ];
+
+    let currentQuestion = 0;
+    let timeRemaining = 45;
+    let timerInterval;
+    let answers = {};
+
+    // Initialize
+    loadQuestion();
+    startQuestionTimer();
+
+    function loadQuestion() {
+      if (currentQuestion >= questions.length) {
+        showCompletion();
+        return;
+      }
+
+      const q = questions[currentQuestion];
+      
+      // Update question number
+      document.getElementById('questionNumber').textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+      
+      // Update question text
+      document.getElementById('questionText').innerHTML = q.text;
+      
+      // Update options
+      const optionsContainer = document.getElementById('optionsContainer');
+      optionsContainer.innerHTML = '';
+      
+      q.options.forEach(opt => {
+        const optionDiv = document.createElement('div');
+        optionDiv.className = 'option';
+        optionDiv.dataset.answer = opt.letter;
+        optionDiv.innerHTML = `
+          <div class="option-letter">${opt.letter}</div>
+          <div class="option-text">${opt.text}</div>
+        `;
+        optionDiv.addEventListener('click', selectOption);
+        optionsContainer.appendChild(optionDiv);
+      });
+
+      // Reset card state
+      document.getElementById('questionCard').classList.remove('locked');
+      const existingOverlay = document.querySelector('.locked-overlay');
+      if (existingOverlay) existingOverlay.remove();
+
+      // Pre-select if already answered
+      if (answers[currentQuestion]) {
+        const selectedOption = optionsContainer.querySelector(`[data-answer="${answers[currentQuestion]}"]`);
+        if (selectedOption) selectedOption.classList.add('selected');
+      }
+    }
+
+    function selectOption(e) {
+      const option = e.currentTarget;
+      if (option.classList.contains('locked')) return;
+
+      // Remove previous selection
+      document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+      
+      // Select this option
+      option.classList.add('selected');
+      
+      // Store answer
+      answers[currentQuestion] = option.dataset.answer;
+    }
+
+    function startQuestionTimer() {
+      timeRemaining = 45;
+      updateTimerDisplay();
+
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        updateTimerDisplay();
+
+        if (timeRemaining <= 10) {
+          document.getElementById('questionTimer').classList.add('warning');
+        }
+
+        if (timeRemaining <= 0) {
+          lockQuestion();
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      document.getElementById('questionTimerValue').textContent = `${minutes}:${String(seconds).padStart(2, '0')}`;
+    }
+
+    function lockQuestion() {
+      clearInterval(timerInterval);
+      
+      document.getElementById('questionTimer').classList.remove('warning');
+      document.getElementById('questionTimer').classList.add('expired');
+      document.getElementById('questionTimerValue').textContent = '0:00';
+
+      // Lock all options
+      document.querySelectorAll('.option').forEach(opt => {
+        opt.classList.add('locked');
+      });
+
+      // Add locked overlay
+      const questionCard = document.getElementById('questionCard');
+      questionCard.classList.add('locked');
+      
+      const overlay = document.createElement('div');
+      overlay.className = 'locked-overlay';
+      overlay.innerHTML = `
+        <div class="locked-icon">⏱️</div>
+        <div class="locked-text">Time Expired</div>
+        <div style="font-size: 14px; color: #64748B; margin-top: 8px;">Moving to next question in 2 seconds...</div>
+      `;
+      questionCard.appendChild(overlay);
+
+      // Auto-advance after 2 seconds
+      setTimeout(() => {
+        nextQuestion();
+      }, 2000);
+    }
+
+    function nextQuestion() {
+      document.getElementById('questionTimer').classList.remove('expired');
+      currentQuestion++;
+      
+      if (currentQuestion < questions.length) {
+        loadQuestion();
+        startQuestionTimer();
+      } else {
+        showCompletion();
+      }
+    }
+
+    function showCompletion() {
+      clearInterval(timerInterval);
+      
+      const container = document.querySelector('.question-container');
+      const answeredCount = Object.keys(answers).length;
+      
+      container.innerHTML = `
+        <div style="text-align: center; padding: 4rem 2rem;">
+          <div style="font-size: 72px; margin-bottom: 2rem;">✓</div>
+          <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 36px; color: var(--blue-deep); margin-bottom: 16px;">Section Complete!</h2>
+          <p style="font-size: 18px; color: #64748B; margin-bottom: 3rem;">You answered ${answeredCount} out of ${questions.length} questions.</p>
+          <button class="nav-btn" onclick="window.location.reload()">Restart Demo</button>
+        </div>
+      `;
+    }
+
+    // Next button handler
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      if (!answers[currentQuestion]) {
+        if (confirm('You haven\'t selected an answer. Move to next question anyway?')) {
+          nextQuestion();
+        }
+      } else {
+        nextQuestion();
+      }
+    });
+
+     // Flag button
+    document.querySelector('.flag-button').addEventListener('click', function() {
+      this.classList.toggle('flagged');
+    });
+
+    // Auto-save simulation
+    setInterval(() => {
+      console.log('Auto-saving answers...', answers);
+    }, 10000);
+  </script>
+
+</body>
+</html>

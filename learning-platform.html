@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learning & Discovery | AScholar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue-deep: #1F4788;
+      --blue-main: #2E75B6;
+      --yellow: #F0F000;
+      --off-white: #F5F7FA;
+      --slate: #334155;
+      --border: #E5E7EB;
+      --success: #10B981;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--off-white);
+      color: var(--slate);
+    }
+
+    /* Header */
+    .header {
+      background: white;
+      border-bottom: 2px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+    }
+
+    .nav-logo-img { 
+      width: 164px; 
+      height: 40px; 
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-square {
+      width: 36px;
+      height: 36px;
+      background: var(--yellow);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--blue-deep);
+    }
+
+    .logo-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 24px;
+      color: var(--blue-deep);
+    }
+
+    .search-bar {
+      flex: 1;
+      max-width: 500px;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px 16px 12px 44px;
+      border: 2px solid var(--border);
+      border-radius: 24px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--blue-main);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      color: #94A3B8;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--blue-main);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    /* Content Layout */
+    .content-layout {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: 260px 1fr 320px;
+      gap: 2rem;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: sticky;
+      top: 92px;
+      align-self: start;
+    }
+
+    .sidebar-section {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      margin-bottom: 1rem;
+    }
+
+    .sidebar-title {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--blue-deep);
+      margin-bottom: 1rem;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      color: var(--slate);
+      text-decoration: none;
+      transition: all 0.2s;
+      margin-bottom: 4px;
+    }
+
+    .nav-item:hover {
+      background: var(--off-white);
+      color: var(--blue-main);
+    }
+
+    .nav-item.active {
+      background: #EFF6FF;
+      color: var(--blue-main);
+      font-weight: 600;
+    }
+
+    /* Feed */
+    .feed {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    /* Post Card */
+    .post-card {
+      background: white;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: all 0.2s;
+    }
+
+    .post-card:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .post-header {
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .post-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--blue-main);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .post-avatar.university {
+      background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+    }
+
+    .post-avatar.teacher {
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    }
+
+    .post-info {
+      flex: 1;
+    }
+
+    .post-author {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--blue-deep);
+      margin-bottom: 2px;
+    }
+
+    .post-meta {
+      font-size: 13px;
+      color: #64748B;
+    }
+
+    .post-badge {
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .post-badge.university {
+      background: #FEE2E2;
+      color: #991B1B;
+    }
+
+    .post-badge.teacher {
+      background: #D1FAE5;
+      color: #065F46;
+    }
+
+    .post-content {
+      padding: 0 1.5rem 1.5rem;
+    }
+
+    .post-text {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--slate);
+      margin-bottom: 1rem;
+    }
+
+    .post-image {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+
+    .post-actions {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: none;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #64748B;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .action-btn:hover {
+      background: var(--off-white);
+      color: var(--blue-main);
+    }
+
+    /* Right Sidebar */
+    .right-sidebar {
+      position: sticky;
+      top: 92px;
+      align-self: start;
+    }
+
+    .widget {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+    }
+
+    .widget-title {
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--blue-deep);
+      margin-bottom: 1rem;
+    }
+
+    .trending-item {
+      padding: 12px;
+      background: var(--off-white);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .trending-item:hover {
+      background: #E2E8F0;
+    }
+
+    .trending-title {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--blue-deep);
+      margin-bottom: 4px;
+    }
+
+    .trending-meta {
+      font-size: 12px;
+      color: #64748B;
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .content-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar, .right-sidebar {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <img src="assets/AScholar-logo.png" class="nav-logo-img" />
+      </div>
+      <div class="search-bar">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" placeholder="Search for content, universities, teachers...">
+      </div>
+      <div class="user-avatar">AO</div>
+    </div>
+  </div>
+
+  <!-- Content Layout -->
+  <div class="content-layout">
+    
+    <!-- Left Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title">Browse</div>
+        <a href="#" class="nav-item active">
+          <span>🏠</span>
+          <span>Feed</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span>📚</span>
+          <span>My Courses</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span>🎓</span>
+          <span>Universities</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span>👨‍🏫</span>
+          <span>Teachers</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span>💬</span>
+          <span>Discussions</span>
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-title">Your Stats</div>
+        <div style="font-size: 13px; color: #64748B; margin-bottom: 8px;">
+          <strong style="color: var(--blue-deep);">12 hours</strong> watched this week
+        </div>
+        <div style="font-size: 13px; color: #64748B;">
+          <strong style="color: var(--blue-deep);">3 courses</strong> in progress
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Feed -->
+    <div class="feed">
+      
+      <!-- University Post - Program Showcase -->
+      <div class="post-card">
+        <div class="post-header">
+          <div class="post-avatar university">UL</div>
+          <div class="post-info">
+            <div class="post-author">University of Leeds</div>
+            <div class="post-meta">2 hours ago</div>
+          </div>
+          <div class="post-badge university">University</div>
+        </div>
+        <div class="post-content">
+          <div class="post-text">
+            🎓 Our MSc in Computer Science combines cutting-edge research with industry partnerships. Students work on real-world AI projects with companies like Google DeepMind and Amazon.<br><br>
+            📍 Leeds, UK | 🗓️ Starts Sept 2026 | 💰 Scholarships available<br><br>
+            AScholar students: Check your dashboard for exclusive scholarship offers!
+          </div>
+          <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&h=400&fit=crop" alt="University campus" class="post-image">
+        </div>
+        <div class="post-actions">
+          <button class="action-btn">👍 Like (47)</button>
+          <button class="action-btn">💬 Comment (12)</button>
+          <button class="action-btn">🔖 Save</button>
+        </div>
+      </div>
+
+      <!-- Teacher Post - Learning Content -->
+      <div class="post-card">
+        <div class="post-header">
+          <div class="post-avatar teacher">DO</div>
+          <div class="post-info">
+            <div class="post-author">Dr. Oluwaseun Adeyemi</div>
+            <div class="post-meta">5 hours ago • STEM Track</div>
+          </div>
+          <div class="post-badge teacher">Teacher</div>
+        </div>
+        <div class="post-content">
+          <div class="post-text">
+            🔥 New Video: "Calculus Made Easy - Integration by Parts Explained"<br><br>
+            Perfect for Round 3 prep! I break down integration by parts using real-world physics examples. 18-minute deep dive with practice questions.<br><br>
+            📌 Key topics: u-substitution, LIATE rule, common mistakes<br>
+            ⏰ 347 students watched this week
+          </div>
+          <div style="background: var(--off-white); padding: 1rem; border-radius: 8px; display: flex; align-items: center; gap: 1rem; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#E2E8F0'" onmouseout="this.style.background='var(--off-white)'">
+            <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 32px; color: white;">▶️</div>
+            <div style="flex: 1;">
+              <div style="font-weight: 600; font-size: 15px; color: var(--blue-deep); margin-bottom: 4px;">Integration by Parts - Full Tutorial</div>
+              <div style="font-size: 13px; color: #64748B;">18:42 • 2.3k views</div>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="action-btn">👍 Like (89)</button>
+          <button class="action-btn">💬 Comment (23)</button>
+          <button class="action-btn">🔖 Save</button>
+        </div>
+      </div>
+
+      <!-- University Post - Campus Life -->
+      <div class="post-card">
+        <div class="post-header">
+          <div class="post-avatar university">UB</div>
+          <div class="post-info">
+            <div class="post-author">University of Birmingham</div>
+            <div class="post-meta">1 day ago</div>
+          </div>
+          <div class="post-badge university">University</div>
+        </div>
+        <div class="post-content">
+          <div class="post-text">
+            📸 A day in the life at Birmingham! Meet Chinedu, one of our MSc Data Science students from Nigeria (AScholar Diamond Scholar 💎).<br><br>
+            "The support from the international office has been amazing. Within my first month, I already landed a research assistant position working on ML projects."<br><br>
+            🌍 85% of our international students secure internships or research roles within their first year.
+          </div>
+          <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&h=400&fit=crop" alt="Student on campus" class="post-image">
+        </div>
+        <div class="post-actions">
+          <button class="action-btn">👍 Like (124)</button>
+          <button class="action-btn">💬 Comment (31)</button>
+          <button class="action-btn">🔖 Save</button>
+        </div>
+      </div>
+
+      <!-- Teacher Post - Study Tips -->
+      <div class="post-card">
+        <div class="post-header">
+          <div class="post-avatar teacher">AK</div>
+          <div class="post-info">
+            <div class="post-author">Prof. Amina Kone</div>
+            <div class="post-meta">2 days ago • Business Track</div>
+          </div>
+          <div class="post-badge teacher">Teacher</div>
+        </div>
+        <div class="post-content">
+          <div class="post-text">
+            💡 Round 3 Study Strategy: Don't just memorize — understand WHY.<br><br>
+            I've analyzed 500+ Round 3 questions. The top performers share one trait: they explain concepts to others before the exam.<br><br>
+            Try this: After each study session, record a 2-minute voice note explaining what you learned as if teaching a friend. If you struggle to explain it simply, you don't understand it yet.<br><br>
+            Drop a 🔥 if you'll try this technique!
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="action-btn">👍 Like (203)</button>
+          <button class="action-btn">💬 Comment (67)</button>
+          <button class="action-btn">🔖 Save</button>
+        </div>
+      </div>
+
+      <!-- University Post - Scholarship Announcement -->
+      <div class="post-card">
+        <div class="post-header">
+          <div class="post-avatar university">UL</div>
+          <div class="post-info">
+            <div class="post-author">University of Leeds</div>
+            <div class="post-meta">3 days ago</div>
+          </div>
+          <div class="post-badge university">University</div>
+        </div>
+        <div class="post-content">
+          <div class="post-text">
+            🎉 SCHOLARSHIP ALERT: We've reserved 5 full scholarships exclusively for AScholar Ruby and Diamond Scholars!<br><br>
+            Covers:<br>
+            ✅ Full tuition (£24,000/year)<br>
+            ✅ £12,000 annual stipend<br>
+            ✅ Visa sponsorship<br>
+            ✅ Airport pickup & orientation<br><br>
+            Applications open now on your AScholar dashboard. Deadline: March 31st.<br><br>
+            Tag a friend who should apply! 🚀
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="action-btn">👍 Like (312)</button>
+          <button class="action-btn">💬 Comment (89)</button>
+          <button class="action-btn">🔖 Save</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Sidebar -->
+    <div class="right-sidebar">
+      
+      <!-- Trending Topics -->
+      <div class="widget">
+        <div class="widget-title">Trending Now</div>
+        <div class="trending-item">
+          <div class="trending-title">#Round3Tips</div>
+          <div class="trending-meta">1,247 posts this week</div>
+        </div>
+        <div class="trending-item">
+          <div class="trending-title">#ScholarshipSeason</div>
+          <div class="trending-meta">892 posts</div>
+        </div>
+        <div class="trending-item">
+          <div class="trending-title">#DiamondGang</div>
+          <div class="trending-meta">543 posts</div>
+        </div>
+      </div>
+
+      <!-- Featured Universities -->
+      <div class="widget">
+        <div class="widget-title">Featured Programs</div>
+        <div style="padding: 12px; background: var(--off-white); border-radius: 8px; margin-bottom: 12px; cursor: pointer;">
+          <div style="font-weight: 600; font-size: 13px; color: var(--blue-deep); margin-bottom: 4px;">MSc AI & Machine Learning</div>
+          <div style="font-size: 12px; color: #64748B;">Imperial College London</div>
+        </div>
+        <div style="padding: 12px; background: var(--off-white); border-radius: 8px; margin-bottom: 12px; cursor: pointer;">
+          <div style="font-weight: 600; font-size: 13px; color: var(--blue-deep); margin-bottom: 4px;">MBA (Tech Management)</div>
+          <div style="font-size: 12px; color: #64748B;">INSEAD</div>
+        </div>
+      </div>
+
+      <!-- Top Teachers -->
+      <div class="widget">
+        <div class="widget-title">Top Educators</div>
+        <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--off-white); border-radius: 8px; margin-bottom: 8px; cursor: pointer;">
+          <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #10B981 0%, #059669 100%); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px;">DO</div>
+          <div style="flex: 1;">
+            <div style="font-weight: 600; font-size: 13px; color: var(--blue-deep);">Dr. Oluwaseun A.</div>
+            <div style="font-size: 11px; color: #64748B;">2.3k followers</div>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--off-white); border-radius: 8px; cursor: pointer;">
+          <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #10B981 0%, #059669 100%); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px;">AK</div>
+          <div style="flex: 1;">
+            <div style="font-weight: 600; font-size: 13px; color: var(--blue-deep);">Prof. Amina K.</div>
+            <div style="font-size: 11px; color: #64748B;">1.9k followers</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</body>
+</html>
